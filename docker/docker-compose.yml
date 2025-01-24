@@ -1,0 +1,27 @@
+version: '3'
+services:
+  github-runner-1:
+    image: adriant7/gh-runner:1.0
+    container_name: homelab-runner-1
+    environment:
+      - GH_REPO_URL=${GH_REPO_1_URL}
+      - GH_RUNNER_NAME=${GH_RUNNER_1_NAME}
+      - GH_RUNNER_GROUP=${GH_RUNNER_1_GROUP}
+      - GH_RUNNER_TOKEN=${GH_RUNNER_1_TOKEN}
+      - GH_RUNNER_WORK_DIR=${GH_RUNNER_1_WORK_DIR}
+      - GH_RUNNER_LABELS=${GH_RUNNER_1_LABELS}
+    restart: always
+    privileged: false
+
+  github-runner-2:
+    image: adriant7/gh-runner:1.0
+    container_name: homelab-runner-2
+    environment:
+      - GH_REPO_URL=${GH_REPO_2_URL}
+      - GH_RUNNER_NAME=${GH_RUNNER_2_NAME}
+      - GH_RUNNER_GROUP=${GH_RUNNER_2_GROUP}
+      - GH_RUNNER_TOKEN=${GH_RUNNER_2_TOKEN}
+      - GH_RUNNER_WORK_DIR=${GH_RUNNER_2_WORK_DIR}
+      - GH_RUNNER_LABELS=${GH_RUNNER_2_LABELS}
+    restart: always
+    privileged: false
