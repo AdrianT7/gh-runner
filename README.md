@@ -40,7 +40,7 @@ This repository provides an easy way to set up and run a self-hosted GitHub Acti
 
    Adjust number of runners in `docker-compose.yml` - default number is 2
 
-3. ### Deploy your runner(s)
+### 3. Deploy your runner(s)
    Inside `docker` directory use:
    `docker-compose up -d`
 
