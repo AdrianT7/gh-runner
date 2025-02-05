@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
   libcurl4-openssl-dev \
   libicu72
 
-RUN curl -s curl -o actions-runner-linux-x64-2.321.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.321.0/actions-runner-linux-x64-2.321.0.tar.gz -o /actions-runner.tar.gz && \
+RUN curl -o actions-runner.tar.gz -L https://github.com/actions/runner/releases/download/v2.322.0/actions-runner-linux-x64-2.322.0.tar.gz && \
     mkdir /actions-runner && \
     tar -xzf /actions-runner.tar.gz -C /actions-runner && \
     rm /actions-runner.tar.gz && \
