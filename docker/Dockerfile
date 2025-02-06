@@ -1,6 +1,9 @@
 FROM debian:12
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update && apt-get install -y \
+  apt-utils \
   curl \
   jq \
   git \
@@ -8,11 +11,24 @@ RUN apt-get update && apt-get install -y \
   libcurl4-openssl-dev \
   libicu72
 
+# Install GitHub Runner
 RUN curl -o actions-runner.tar.gz -L https://github.com/actions/runner/releases/download/v2.322.0/actions-runner-linux-x64-2.322.0.tar.gz && \
     mkdir /actions-runner && \
     tar -xzf /actions-runner.tar.gz -C /actions-runner && \
     rm /actions-runner.tar.gz && \
     useradd runner -s /bin/bash
+
+# Install Terraform
+RUN apt-get install -y \
+  gnupg \
+  software-properties-common && \
+  curl -fsSL https://apt.releases.hashicorp.com/gpg |\
+  gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
+  echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" |\
+  tee /etc/apt/sources.list.d/hashicorp.list >/dev/null && \
+  apt-get update && apt-get install -y terraform
+
+RUN rm -rf /var/lib/apt/lists/*
 
 WORKDIR /actions-runner
 
