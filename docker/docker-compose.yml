@@ -1,7 +1,7 @@
 version: '3'
 services:
   github-runner:
-    image: "adriant7/gh-runner:1.0"
+    image: "adriant7/gh-runner:1.1.0"
     environment:
       - GH_REPO_URL=${GH_REPO_URL}
       - GH_RUNNER_NAME=${GH_RUNNER_NAME}
