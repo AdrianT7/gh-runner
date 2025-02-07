@@ -1,22 +1,25 @@
 FROM debian:12
 
-ENV DEBIAN_FRONTEND=noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
   apt-utils \
-  curl \
-  jq \
-  git \
   bash \
+  curl \
+  git \
+  jq \
   libcurl4-openssl-dev \
   libicu72
 
 # Install GitHub Runner
 RUN curl -o actions-runner.tar.gz -L https://github.com/actions/runner/releases/download/v2.322.0/actions-runner-linux-x64-2.322.0.tar.gz && \
-    mkdir /actions-runner && \
-    tar -xzf /actions-runner.tar.gz -C /actions-runner && \
-    rm /actions-runner.tar.gz && \
-    useradd runner -s /bin/bash
+  mkdir /actions-runner && \
+  tar -xzf /actions-runner.tar.gz -C /actions-runner && \
+  rm /actions-runner.tar.gz && \
+  useradd runner -s /bin/bash -d /actions-runner
+
+# Install Ansible
+RUN apt-get install -y ansible
 
 # Install Terraform
 RUN apt-get install -y \
