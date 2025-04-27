@@ -31,9 +31,6 @@ RUN apt-get install -y \
   tee /etc/apt/sources.list.d/hashicorp.list >/dev/null && \
   apt-get update && apt-get install -y terraform
 
-# Install Docker
-RUN apt-get install -y docker.io
-
 RUN rm -rf /var/lib/apt/lists/*
 
 WORKDIR /actions-runner
