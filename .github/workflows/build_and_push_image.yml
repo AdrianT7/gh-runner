@@ -1,0 +1,63 @@
+name: Build and push image to Dockerhub
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    name: Release new image
+    runs-on: [self-hosted, Linux, Proxmox]
+    env:
+      IMAGE: '${{ github.repository }}'
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      
+      - name: Read version from VERSION file
+        run: |
+          VERSION=$(cat VERSION)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Set appropriate image tag
+        run: sed -i "s/__image_tag__/$VERSION/" image-builder/release-image-job.yml
+
+      - name: Authenticate into cluster
+        run: |
+          mkdir -p ~/.kube && \
+          echo ${{ secrets.KUBECTL_CRED }} | base64 --decode > ~/.kube/config
+
+      - name: Create namespace for kaniko secrets
+        run: kubectl apply -f image-builder/namespace.yml
+
+      - name: Provide secret for github repositories
+        run: |
+          kubectl create secret generic github-pat \
+            --from-literal=github-pat=${{ secrets.GH_PAT }} \
+            -n kaniko \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Provide secret for docker-hub
+        run: |
+          echo ${{ secrets.DOCKER_HUB_CRED }} | base64 --decode > config.json
+
+          if [ ! -f config.json ]; then
+            echo "Decoded config.json does not exist. Failing step..." ; exit 1
+          fi
+
+          kubectl create secret generic docker-hub-cred \
+            --from-file=config.json \
+            -n kaniko \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Delete tmp docker-hub json
+        run: rm config.json
+      
+      - name: Build and push image to docker hub
+        run: kubectl create -f image-builder/release-image-job.yml
+
+      - name: Cleanup kubeconfig
+        run: rm -rf ~/.kube
