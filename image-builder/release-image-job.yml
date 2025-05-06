@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: deploy-gh-runner-image-
+  namespace: kaniko
+spec:
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      volumes:
+        - name: docker-hub-credentials
+          secret:
+            secretName: docker-hub-cred
+      containers:
+        - name: kaniko
+          image: gcr.io/kaniko-project/executor:latest
+          args: ["--dockerfile=Dockerfile",
+            "--context=git://github.com/AdrianT7/gh-runner.git",
+            "--destination=adriant7/gh-runner:latest",
+            "--destination=adriant7/gh-runner:__image_tag__"
+          ]
+          env:
+            - name: GIT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-pat
+                  key: github-pat 
+          volumeMounts:
+            - name: docker-hub-credentials
+              readOnly: true
+              mountPath: "/kaniko/.docker/"
+      restartPolicy: Never
