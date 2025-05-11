@@ -15,7 +15,7 @@ spec:
       containers:
         - name: kaniko
           image: gcr.io/kaniko-project/executor:latest
-          args: ["--dockerfile=docker/Dockerfile",
+          args: ["--dockerfile=Dockerfile",
             "--context=git://github.com/AdrianT7/gh-runner.git",
             "--destination=adriant7/gh-runner:latest",
             "--destination=adriant7/gh-runner:__image_tag__"
