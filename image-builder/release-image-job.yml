@@ -30,4 +30,11 @@ spec:
             - name: docker-hub-credentials
               readOnly: true
               mountPath: "/kaniko/.docker/"
+          resources:
+            requests:
+              memory: "10Gi"
+              cpu: "500m"
+            limits:
+              memory: "20Gi"
+              cpu: "2"
       restartPolicy: Never
