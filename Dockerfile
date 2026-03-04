@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
   libicu72
 
 # Install GitHub Runner
-RUN curl -o actions-runner.tar.gz -L https://github.com/actions/runner/releases/download/v2.322.0/actions-runner-linux-x64-2.322.0.tar.gz && \
+RUN curl -o actions-runner.tar.gz -L https://github.com/actions/runner/releases/download/v2.331.0/actions-runner-linux-x64-2.331.0.tar.gz && \
   mkdir /actions-runner && \
   tar -xzf /actions-runner.tar.gz -C /actions-runner && \
   rm /actions-runner.tar.gz && \
